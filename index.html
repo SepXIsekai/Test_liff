@@ -138,6 +138,29 @@
         document.getElementById("btnClose").style.display = "none"
       }
     }
+    async function sendFlexMessage() {
+      try {
+        if (!globalUserid) {
+          const profile = await liff.getProfile();
+          globalUserid = profile.userId;
+        }
+        const uri = "https://gsct3c2p-3001.asse.devtunnels.ms";
+        const response = await fetch(`${uri}/api/v1/sendflexmessage/${globalUserid}`, {
+              method: "POST",
+              headers: {
+                      "Content-Type": "application/json",
+                      },
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log("ส่งส่ ข้อข้ ความสํา เร็จร็:", result);
+        return result;
+        } catch (error) {
+console.error("เกิดข้อข้ ผิดผิ พลาดในการส่งส่ ข้อข้ ความ:", error);
+}
+}
 
     async function main() {
       liff.ready.then(() => {
@@ -148,6 +171,7 @@
           getContext()
           getFriendship()
           createUniversalLink()
+          sendFlexMessage()
         } else {
           liff.login()
         }
